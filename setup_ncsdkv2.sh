@@ -34,7 +34,11 @@ echo "intel" | sudo apt-get install -y cmake git vim tree htop wget python-pip p
 mkdir -p ~/workspace/libraries && cd ~/workspace/libraries
 git clone https://github.com/movidius/ncsdk.git
 cd ~/workspace/libraries/ncsdk
+set +o errexit
+
 echo "intel" | sudo -S make install
+
+set -o errexit
 cd ~/workspace/libraries
 git clone https://github.com/movidius/ncappzoo.git
 
@@ -74,18 +78,42 @@ echo "intel" | sudo -S sh -c 'echo "deb http://packages.ros.org/ros/ubuntu `lsb_
 echo "intel" | sudo -S apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys 421C365BD9FF1F717815A3895523BAEEB01FA116
 
 echo "intel" | sudo -S apt-get update
+echo "intel" | sudo -S apt-get install -y git wget
 echo "intel" | sudo -S apt-get install -y build-essential cppcheck cmake libopencv-dev python-empy python3-catkin-pkg-modules python3-dev python3-empy python3-nose python3-pip python3-pyparsing python3-setuptools python3-vcstool python3-yaml libtinyxml-dev libeigen3-dev libassimp-dev libpoco-dev
-echo "intel" | sudo -S apt-get install -y clang-format pydocstyle pyflakes python3-coverage python3-mock python3-pep8 uncrustify libasio-dev libtinyxml2-dev
-echo "intel" | sudo -S pip3 install flake8 flake8-blind-except flake8-builtins flake8-class-newline flake8-comprehensions flake8-deprecated flake8-docstrings flake8-import-order flake8-quotes pytest pytest-cov pytest-runner argcomplete
+echo "intel" | sudo -S apt-get install -y python3-colcon-common-extensions
+
+# dependencies for testing
+echo "intel" | sudo -S apt-get install -y clang-format pydocstyle pyflakes python3-coverage python3-mock python3-pep8 uncrustify
+
+# Install argcomplete for command-line tab completion from the ROS2 tools.
+# Install from pip rather than from apt because of a bug in the Ubuntu 16.04 version of argcomplete:
+echo "intel" | sudo -S -H python3 -m pip install argcomplete
+
+# additional testing dependencies from pip (because not available on ubuntu 16.04)
+echo "intel" | sudo -S -H python3 -m pip install flake8 flake8-blind-except flake8-builtins flake8-class-newline flake8-comprehensions flake8-deprecated flake8-docstrings flake8-import-order flake8-quotes pytest pytest-cov pytest-runner
+
+# additional pytest plugins unavailable from Debian
+echo "intel" | sudo -S -H python3 -m pip install pytest-repeat pytest-rerunfailures
+
+# dependencies for FastRTPS
+echo "intel" | sudo -S apt-get install -y libasio-dev libtinyxml2-dev
+ 
+# dependencies for RViz
 echo "intel" | sudo -S apt-get install -y libcurl4-openssl-dev libqt5core5a libqt5gui5 libqt5opengl5 libqt5widgets5 libxaw7-dev libgles2-mesa-dev libglu1-mesa-dev qtbase5-dev
+
+
 cd /usr/lib/x86_64-linux-gnu
-#echo "intel" | sudo -S ln -s libboost_python-py35.so libboost_python3.so
+
+if [ ! -d "libboost_python3.so" ]; then
+  echo "intel" | sudo -S ln -s libboost_python-py35.so libboost_python3.so
+else
+  echo "soft link already exists, skip..."
+fi
 
 mkdir -p ~/ros2_ws/src
 cd ~/ros2_ws
 wget https://raw.githubusercontent.com/ros2/ros2/master/ros2.repos
 vcs-import src < ros2.repos
-src/ament/ament_tools/scripts/ament.py build --build-tests --symlink-install
 
 # Install RealSense Dependencies
 echo "intel" | sudo -S apt-get install -y libusb-1.0.0-dev pkg-config libgtk-3-dev libglfw3-dev libudev-dev
@@ -105,19 +133,19 @@ echo "intel" | sudo -S cp config/99-realsense-libusb.rules /etc/udev/rules.d/
 echo "intel" | sudo -S udevadm control --reload-rules
 udevadm trigger
 
-cd ~/ros2_ws/src
-git clone https://github.com/ros-perception/vision_opencv.git
-cd ~/ros2_ws/src/vision_opencv
-git checkout ros2
-cd ~/ros2_ws/src
-git clone https://github.com/intel/ros2_intel_realsense
+#cd ~/ros2_ws/src
+#git clone https://github.com/ros-perception/vision_opencv.git
+#cd ~/ros2_ws/src/vision_opencv
+#git checkout ros2
+#cd ~/ros2_ws/src
+#git clone https://github.com/intel/ros2_intel_realsense
 
 # Install ros2 ncs projects
-cd ~/ros2_ws/src
-git clone https://github.com/intel/ros2_intel_movidius_ncs
-git clone https://github.com/intel/ros2_object_msgs
+#cd ~/ros2_ws/src
+#git clone https://github.com/intel/ros2_intel_movidius_ncs
+#git clone https://github.com/intel/ros2_object_msgs
 
 cd ~/ros2_ws/
-src/ament/ament_tools/scripts/ament.py build --build-tests --symlink-install
+colcon build --symlink-install
 
 echo "Finish Environment Setup"
