@@ -104,7 +104,7 @@ echo "intel" | sudo -S apt-get install -y libcurl4-openssl-dev libqt5core5a libq
 
 cd /usr/lib/x86_64-linux-gnu
 
-if [ ! -d "libboost_python3.so" ]; then
+if [ ! -f "libboost_python3.so" ]; then
   echo "intel" | sudo -S ln -s libboost_python-py35.so libboost_python3.so
 else
   echo "soft link already exists, skip..."
@@ -133,17 +133,17 @@ echo "intel" | sudo -S cp config/99-realsense-libusb.rules /etc/udev/rules.d/
 echo "intel" | sudo -S udevadm control --reload-rules
 udevadm trigger
 
-#cd ~/ros2_ws/src
-#git clone https://github.com/ros-perception/vision_opencv.git
-#cd ~/ros2_ws/src/vision_opencv
-#git checkout ros2
-#cd ~/ros2_ws/src
-#git clone https://github.com/intel/ros2_intel_realsense
+cd ~/ros2_ws/src
+git clone https://github.com/ros-perception/vision_opencv.git
+cd ~/ros2_ws/src/vision_opencv
+git checkout ros2
+cd ~/ros2_ws/src
+git clone https://github.com/intel/ros2_intel_realsense
 
 # Install ros2 ncs projects
-#cd ~/ros2_ws/src
-#git clone https://github.com/intel/ros2_intel_movidius_ncs
-#git clone https://github.com/intel/ros2_object_msgs
+cd ~/ros2_ws/src
+git clone https://github.com/intel/ros2_intel_movidius_ncs
+git clone https://github.com/intel/ros2_object_msgs
 
 cd ~/ros2_ws/
 colcon build --symlink-install
