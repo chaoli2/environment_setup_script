@@ -30,9 +30,13 @@ echo "intel" | sudo -S cp ./config/pip.conf /root/.pip
 echo "intel" | sudo apt-get update
 echo "intel" | sudo apt-get install -y cmake git vim tree htop wget python-pip python3-pip
 
+# Configure Git Environment
+git config --global user.name "Chao Li"
+git config --global user.email "chao1.li@intel.com"
+
 # Install NCSDK and NCAPPZOO
 mkdir -p ~/workspace/libraries && cd ~/workspace/libraries
-git clone https://github.com/movidius/ncsdk.git
+source ~/.bashrc && git clone https://github.com/movidius/ncsdk.git
 cd ~/workspace/libraries/ncsdk
 set +o errexit
 
@@ -40,7 +44,7 @@ echo "intel" | sudo -S make install
 
 set -o errexit
 cd ~/workspace/libraries
-git clone https://github.com/movidius/ncappzoo.git
+source ~/.bashrc && git clone https://github.com/movidius/ncappzoo.git
 
 # Install OpenCV
 echo "intel" | sudo -S apt-get install -y build-essential
