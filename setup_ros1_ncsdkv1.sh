@@ -9,11 +9,21 @@ rm -rf ~/workspace/libraries
 rm -rf ~/ros2_ws
 
 # Setup Network Proxy
-echo "export http_proxy=http://child-prc.intel.com:913" >> ~/.bashrc
-echo "export https_proxy=http://child-prc.intel.com:913" >> ~/.bashrc
-echo "intel" | sudo -S sh -c 'echo "export http_proxy=http://child-prc.intel.com:913" >> /root/.bashrc'
-echo "intel" | sudo -S sh -c 'echo "export https_proxy=http://child-prc.intel.com:913" >> /root/.bashrc'
-source ~/.bashrc
+tail ~/.bashrc | grep "http_proxy=http://child-prc.intel.com:913"
+if [ "$?" == "1" ]; then
+  echo "export http_proxy=http://child-prc.intel.com:913" >> ~/.bashrc
+  echo "export https_proxy=http://child-prc.intel.com:913" >> ~/.bashrc
+else
+  echo "proxy already set, skip..."
+fi
+
+echo "intel" | sudo -S tail /root/.bashrc | grep "http_proxy=http://child-prc.intel.com:913"
+if [ "$?" == "1" ]; then
+  echo "intel" | sudo -S sh -c 'echo "export http_proxy=http://child-prc.intel.com:913" >> /root/.bashrc'
+  echo "intel" | sudo -S sh -c 'echo "export https_proxy=http://child-prc.intel.com:913" >> /root/.bashrc'
+else
+  echo "proxy already set, skip..."
+fi
 
 echo "intel" | sudo -S touch /etc/apt/apt.conf.d/10proxy
 echo "intel" | sudo -S sh -c  'echo "Acquire::http::proxy \"http://child-prc.intel.com:913\";" >> /etc/apt/apt.conf.d/10proxy'
@@ -56,11 +66,44 @@ mkdir -p ~/catkin_ws/src
 cd ~/catkin_ws/
 source /opt/ros/kinetic/setup.bash && catkin_make
 
-cd /tmp
-wget registrationcenter-download.intel.com/akdlm/irc_nas/11396/SRB4.1_linux64.zip
-unzip -o SRB4.1_linux64.zip
-echo "intel" | sudo -S rpm -Uivh --nodeps --force --replacepkgs intel-opencl-r4.1-61547.x86_64.rpm
-echo "intel" | sudo -S rpm -Uivh --nodeps --force --replacepkgs intel-opencl-cpu-r4.1-61547.x86_64.rpm
-echo "intel" | sudo -S rpm -Uivh --nodeps --force --replacepkgs intel-opencl-devel-r4.1-61547.x86_64.rpm
+# Install NCSDK and NCAPPZOO
+mkdir -p ~/workspace/libraries && cd ~/workspace/libraries
+
+cd ~/workspace/libraries
+source ~/.bashrc && git clone https://github.com/movidius/ncappzoo.git
+
+source ~/.bashrc && git clone https://github.com/movidius/ncsdk.git
+cd ~/workspace/libraries/ncsdk
+
+# Install LibRealSense
+echo "intel" | sudo -S apt-get install -y libusb-1.0.0-dev pkg-config libgtk-3-dev libglfw3-dev libudev-dev
+cd ~/workspace/libraries
+git clone https://github.com/IntelRealSense/librealsense
+cd ~/workspace/libraries/librealsense
+git checkout v2.9.1
+mkdir build && cd build
+cmake ..
+echo "intel" | sudo -S make uninstall
+make clean
+make
+echo "intel" | sudo -S make install
+
+cd ..
+echo "intel" | sudo -S cp config/99-realsense-libusb.rules /etc/udev/rules.d/
+echo "intel" | sudo -S udevadm control --reload-rules
+udevadm trigger
+
+rm -rf ~/catkin_ws
+mkdir -p ~/catkin_ws/src
+cd ~/catkin_ws/src
+git clone https://github.com/intel/object_msgs.git
+git clone https://github.com/intel/ros_intel_movidius_ncs.git
+
+git clone https://github.com/intel-ros/realsense.git
+cd realsense
+git checkout 2.0.2
+
+cd ~/catkin_ws
+catkin_make
 
 echo "Finish Environment Setup"
