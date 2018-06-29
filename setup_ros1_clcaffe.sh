@@ -3,7 +3,7 @@ set -o errexit #set +o errexit echo "Begin Environment Setup"
 
 # Check OS and Kernel Version
 
-
+basedir=$(cd `dirname $0`; pwd)
 # Clean Existing Directories
 rm -rf ~/workspace/libraries
 rm -rf ~/ros2_ws
@@ -56,11 +56,60 @@ mkdir -p ~/catkin_ws/src
 cd ~/catkin_ws/
 source /opt/ros/kinetic/setup.bash && catkin_make
 
+# Install OpenCL Driver
 cd /tmp
 wget registrationcenter-download.intel.com/akdlm/irc_nas/11396/SRB4.1_linux64.zip
 unzip -o SRB4.1_linux64.zip
 echo "intel" | sudo -S rpm -Uivh --nodeps --force --replacepkgs intel-opencl-r4.1-61547.x86_64.rpm
 echo "intel" | sudo -S rpm -Uivh --nodeps --force --replacepkgs intel-opencl-cpu-r4.1-61547.x86_64.rpm
 echo "intel" | sudo -S rpm -Uivh --nodeps --force --replacepkgs intel-opencl-devel-r4.1-61547.x86_64.rpm
+
+echo "intel" | sudo -S apt-get install libprotobuf-dev libleveldb-dev libsnappy-dev libopencv-dev libhdf5-serial-dev protobuf-compiler
+echo "intel" | sudo -S apt-get install --no-install-recommends libboost-all-dev
+echo "intel" | sudo -S apt-get install libopenblas-dev liblapack-dev libatlas-base-dev
+echo "intel" | sudo -S apt-get install libgflags-dev libgoogle-glog-dev liblmdb-dev
+rm -rf $HOME/code
+mkdir -p $HOME/code
+cd $HOME/code
+git clone https://github.com/viennacl/viennacl-dev.git
+cd viennacl-dev
+mkdir build && cd build
+cmake -DBUILD_TESTING=OFF -DBUILD_EXAMPLES=OFF -DCMAKE_INSTALL_PREFIX=$HOME/local -DOPENCL_LIBRARY=/opt/intel/opencl/libOpenCL.so ..
+make -j4
+make install
+cd $HOME/code
+git clone https://github.com/intel/isaac
+cd isaac
+mkdir build && cd build
+cmake -DCMAKE_INSTALL_PREFIX=$HOME/local .. && make -j4
+make install
+
+# Install MKL
+cd /tmp
+wget http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/13005/l_mkl_2018.3.222.tgz
+tar xvf l_mkl_2018.3.222.tgz
+
+cd l_mkl_2018.3.222
+cp $basedir/config/silent.cfg .
+echo "intel" | sudo -S ./install.sh --silent silent.cfg
+echo "Intel MKL installed"
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/intel/mkl/lib/intel64_lin/
+
+cd $HOME/code
+git clone https://github.com/01org/caffe clCaffe
+cd clCaffe
+git checkout inference-optimize
+mkdir build && cd build
+export ISAAC_HOME=$HOME/local
+cmake .. -DUSE_GREENTEA=ON -DUSE_CUDA=OFF -DUSE_INTEL_SPATIAL=ON -DBUILD_docs=0 -DUSE_ISAAC=ON -DViennaCL_INCLUDE_DIR=$HOME/local/include -DBLAS=mkl -DOPENCL_LIBRARIES=/opt/intel/opencl/libOpenCL.so -DOPENCL_INCLUDE_DIRS=/opt/intel/opencl/include
+make -j4
+export CAFFE_ROOT=$HOME/code/clCaffe
+
+# Convert YOLO Model
+cd $HOME/code/clCaffe
+wget https://pjreddie.com/media/files/yolo-voc.weights -O models/yolo/yolo416/yolo.weights
+pip install scikit-image protobuf
+python models/yolo/convert_yolo_to_caffemodel.py
+python tools/inference-optimize/model_fuse.py --indefinition models/yolo/yolo416/yolo_deploy.prototxt --outdefinition models/yolo/yolo416/fused_yolo_deploy.prototxt --inmodel models/yolo/yolo416/yolo.caffemodel --outmodel models/yolo/yolo416/fused_yolo.caffemodel
 
 echo "Finish Environment Setup"
