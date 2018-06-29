@@ -6,7 +6,7 @@ set -o errexit #set +o errexit echo "Begin Environment Setup"
 basedir=$(cd `dirname $0`; pwd)
 # Clean Existing Directories
 rm -rf ~/workspace/libraries
-rm -rf ~/ros2_ws
+rm -rf ~/catkin_ws
 
 # Setup Network Proxy
 echo "export http_proxy=http://child-prc.intel.com:913" >> ~/.bashrc
@@ -104,6 +104,8 @@ export ISAAC_HOME=$HOME/local
 cmake .. -DUSE_GREENTEA=ON -DUSE_CUDA=OFF -DUSE_INTEL_SPATIAL=ON -DBUILD_docs=0 -DUSE_ISAAC=ON -DViennaCL_INCLUDE_DIR=$HOME/local/include -DBLAS=mkl -DOPENCL_LIBRARIES=/opt/intel/opencl/libOpenCL.so -DOPENCL_INCLUDE_DIRS=/opt/intel/opencl/include
 make -j4
 export CAFFE_ROOT=$HOME/code/clCaffe
+echo "intel" | sudo -S ln -s /home/intel/code/clCaffe/ /opt/clCaffe
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/clCaffe/build/lib
 
 # Convert YOLO Model
 cd $HOME/code/clCaffe
@@ -111,5 +113,12 @@ wget https://pjreddie.com/media/files/yolo-voc.weights -O models/yolo/yolo416/yo
 pip install scikit-image protobuf
 python models/yolo/convert_yolo_to_caffemodel.py
 python tools/inference-optimize/model_fuse.py --indefinition models/yolo/yolo416/yolo_deploy.prototxt --outdefinition models/yolo/yolo416/fused_yolo_deploy.prototxt --inmodel models/yolo/yolo416/yolo.caffemodel --outmodel models/yolo/yolo416/fused_yolo.caffemodel
+
+# Compile
+cd ~/catkin_ws/src
+git clone https://github.com/intel/object_msgs
+git clone https://github.com/intel/ros_opencl_caffe
+cd ~/catkin_ws/
+catkin_make
 
 echo "Finish Environment Setup"
