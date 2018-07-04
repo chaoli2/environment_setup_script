@@ -64,10 +64,10 @@ echo "intel" | sudo -S rpm -Uivh --nodeps --force --replacepkgs intel-opencl-r4.
 echo "intel" | sudo -S rpm -Uivh --nodeps --force --replacepkgs intel-opencl-cpu-r4.1-61547.x86_64.rpm
 echo "intel" | sudo -S rpm -Uivh --nodeps --force --replacepkgs intel-opencl-devel-r4.1-61547.x86_64.rpm
 
-echo "intel" | sudo -S apt-get install libprotobuf-dev libleveldb-dev libsnappy-dev libopencv-dev libhdf5-serial-dev protobuf-compiler
-echo "intel" | sudo -S apt-get install --no-install-recommends libboost-all-dev
-echo "intel" | sudo -S apt-get install libopenblas-dev liblapack-dev libatlas-base-dev
-echo "intel" | sudo -S apt-get install libgflags-dev libgoogle-glog-dev liblmdb-dev
+echo "intel" | sudo -S apt-get install -y libprotobuf-dev libleveldb-dev libsnappy-dev libopencv-dev libhdf5-serial-dev protobuf-compiler
+echo "intel" | sudo -S apt-get install -y --no-install-recommends libboost-all-dev
+echo "intel" | sudo -S apt-get install -y libopenblas-dev liblapack-dev libatlas-base-dev
+echo "intel" | sudo -S apt-get install -y libgflags-dev libgoogle-glog-dev liblmdb-dev
 rm -rf $HOME/code
 mkdir -p $HOME/code
 cd $HOME/code
