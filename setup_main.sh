@@ -118,8 +118,11 @@ fi
 # Setup Prerequisite
 if [ "$PREREQUISITE" == "1" ]; then
   echo "===================Installing Prerequisite...======================="
+  echo $ROOT_PASSWD | sudo -S rm -f /var/lib/apt/lists/lock /var/lib/dpkg/lock /var/cache/apt/archives/lock
   echo $ROOT_PASSWD | sudo -S apt-get update
   echo $ROOT_PASSWD | sudo -S apt-get install -y cmake git vim tree htop wget python-pip python3-pip rpm
+  git config --global user.name "Chao Li"
+  git config --global user.email "chao1.li@intel.com"
   echo "Prerequisite Setup Done"
 fi
 
@@ -227,7 +230,9 @@ fi
 if [ "$OPENCV" == "1" ]; then
   echo "===================Installing OpenCV3 from Source...======================="
   echo $ROOT_PASSWD | sudo -S apt-get install -y build-essential
-  echo $ROOT_PASSWD | sudo -S apt-get install -y cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
+  echo $ROOT_PASSWD | sudo -S apt-get install -y cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev 
+  # add HTTPS protocol support
+  echo $ROOT_PASSWD | sudo -S apt-get install -y libcurl4-gnutls-dev zlib1g-dev
 
   mkdir -p ~/workspace/libraries && cd ~/workspace/libraries
   echo "begin clone opencv"
@@ -263,9 +268,9 @@ if [ "$OPENCV" == "1" ]; then
   cd ~/workspace/libraries/opencv
   mkdir build && cd build
   cmake -DOPENCV_EXTRA_MODULES_PATH=/home/intel/workspace/libraries/opencv_contrib/modules -DCMAKE_INSTALL_PREFIX=/usr/local -DBUILD_opencv_cnn_3dobj=OFF ..
-  #make -j4
-  #echo $ROOT_PASSWD | sudo -S make install
-  #echo $ROOT_PASSWD | sudo -S ldconfig
+  make -j4
+  echo $ROOT_PASSWD | sudo -S make install
+  echo $ROOT_PASSWD | sudo -S ldconfig
 fi
 
 # Setup NCSDK
@@ -275,7 +280,7 @@ if [ "$NCSDK" == "1" ]; then
   cd ~/workspace/libraries
   . ~/.bashrc && git clone https://github.com/movidius/ncsdk.git
   cd ncsdk
-  make install
+  echo $ROOT_PASSWD | sudo -S make install
 fi
 
 # Setup NCAPPZOO
