@@ -66,6 +66,10 @@ CLCAFFE=`cat modules.conf | grep 'clcaffe'`
 CLCAFFE=${CLCAFFE##*=}
 echo "Set CLCAFFE to $CLCAFFE"
 
+OPENVINO=`cat modules.conf | grep 'openvino'`
+OPENVINO=${OPENVINO##*=}
+echo "Set OPENVINO to $OPENVINO"
+
 # Clean Existing Directories
 if [ "$CLEAN" == "1" ]; then
   echo "===================Cleaning...===================================="
@@ -380,6 +384,15 @@ if [ "$CLCAFFE" == "1" ]; then
   git clone https://github.com/intel/ros_opencl_caffe
   cd ~/catkin_ws/
   catkin_make
+fi
+
+# Setup OPENVINO
+if [ "$OPENVINO" == "1" ]; then
+  cd ~/Download
+  wget http://registrationcenter-download.intel.com/akdlm/irc_nas/13521/l_openvino_toolkit_p_2018.3.343.tgz
+  tar -xvf l_openvino_toolkit_p_2018.3.343.tgz
+  cd l_openvino_toolkit_p_2018.3.343
+  ./install_cv_sdk_dependencies.sh
 fi
 
 #rm -rf ~/catkin_ws
