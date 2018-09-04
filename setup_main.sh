@@ -123,6 +123,7 @@ if [ "$PREREQUISITE" == "1" ]; then
   echo $ROOT_PASSWD | sudo -S apt-get install -y cmake git vim tree htop wget python-pip python3-pip rpm
   git config --global user.name "Chao Li"
   git config --global user.email "chao1.li@intel.com"
+  git config --global core.editor vim
   echo "Prerequisite Setup Done"
 fi
 
@@ -349,8 +350,8 @@ if [ "$CLCAFFE" == "1" ]; then
   tar xvf l_mkl_2018.3.222.tgz
 
   cd l_mkl_2018.3.222
-  cp $basedir/config/silent.cfg .
-  echo $ROOT_PASSWD | sudo -S ./install.sh --silent silent.cfg
+  cp $basedir/config/mkl_silent.cfg .
+  echo $ROOT_PASSWD | sudo -S ./install.sh --silent mkl_silent.cfg
   echo "Intel MKL installed"
   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/intel/mkl/lib/intel64_lin/
 
