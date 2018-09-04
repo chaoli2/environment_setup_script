@@ -191,7 +191,7 @@ if [ "$ROS2_SRC" == "1" ]; then
 
   echo $ROOT_PASSWD | sudo -S apt-get update
   echo $ROOT_PASSWD | sudo -S apt-get install -y git wget
-  echo $ROOT_PASSWD | sudo -S apt-get install -y build-essential cppcheck cmake libopencv-dev python-empy python3-catkin-pkg-modules python3-dev python3-empy python3-nose python3-pip python3-pyparsing python3-setuptools python3-vcstool python3-yaml libtinyxml-dev libeigen3-dev libassimp-dev libpoco-dev
+  echo $ROOT_PASSWD | sudo -S apt-get install -y build-essential cppcheck cmake python-empy python3-catkin-pkg-modules python3-dev python3-empy python3-nose python3-pip python3-pyparsing python3-setuptools python3-vcstool python3-yaml libtinyxml-dev libeigen3-dev libassimp-dev libpoco-dev
   echo $ROOT_PASSWD | sudo -S apt-get install -y python3-colcon-common-extensions
 
   # dependencies for testing
@@ -329,7 +329,7 @@ if [ "$CLCAFFE" == "1" ]; then
   echo $ROOT_PASSWD | sudo -S rpm -Uivh --nodeps --force --replacepkgs intel-opencl-cpu-r4.1-61547.x86_64.rpm
   echo $ROOT_PASSWD | sudo -S rpm -Uivh --nodeps --force --replacepkgs intel-opencl-devel-r4.1-61547.x86_64.rpm
 
-  echo $ROOT_PASSWD | sudo -S apt-get install -y libprotobuf-dev libleveldb-dev libsnappy-dev libopencv-dev libhdf5-serial-dev protobuf-compiler
+  echo $ROOT_PASSWD | sudo -S apt-get install -y libprotobuf-dev libleveldb-dev libsnappy-dev libhdf5-serial-dev protobuf-compiler
   echo $ROOT_PASSWD | sudo -S apt-get install -y --no-install-recommends libboost-all-dev
   echo $ROOT_PASSWD | sudo -S apt-get install -y libopenblas-dev liblapack-dev libatlas-base-dev
   echo $ROOT_PASSWD | sudo -S apt-get install -y libgflags-dev libgoogle-glog-dev liblmdb-dev
