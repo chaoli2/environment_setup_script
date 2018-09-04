@@ -229,6 +229,7 @@ if [ "$ROS2_SRC" == "1" ]; then
   vcs-import src < ros2.repos
 
   colcon build --symlink-install
+
 fi
 
 # Setup OpenCV
@@ -392,7 +393,17 @@ if [ "$OPENVINO" == "1" ]; then
   wget http://registrationcenter-download.intel.com/akdlm/irc_nas/13521/l_openvino_toolkit_p_2018.3.343.tgz
   tar -xvf l_openvino_toolkit_p_2018.3.343.tgz
   cd l_openvino_toolkit_p_2018.3.343
-  ./install_cv_sdk_dependencies.sh
+  echo $ROOT_PASSWD | sudo -S ./install_cv_sdk_dependencies.sh
+  cp $basedir/config/openvino_silent.cfg .
+  echo $ROOT_PASSWD | sudo -S ./install.sh --silent openvino_silent.cfg
+
+  tail ~/.bashrc | grep "computer_vision_sdk/bin/setupvars.sh"
+  if [ "$?" == "1" ]; then
+    echo "source /opt/intel/computer_vision_sdk/bin/setupvars.sh" >> ~/.bashrc
+  else
+    echo "openvino already set, skip..."
+  fi
+
 fi
 
 #rm -rf ~/catkin_ws
