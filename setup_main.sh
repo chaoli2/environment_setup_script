@@ -11,7 +11,7 @@ else
   echo "Set sudo password to $ROOT_PASSWD"
 fi
 
-basedir=$(PWD)
+basedir=$PWD
 echo "Begin Environment Setup"
 
 #Get Config Parameters
@@ -280,7 +280,7 @@ if [ "$LIBREALSENSE" == "1" ]; then
   mkdir -p ~/workspace/libraries && cd ~/workspace/libraries
   git clone https://github.com/IntelRealSense/librealsense
   cd ~/workspace/libraries/librealsense
-  git checkout v2.9.1
+  git checkout v2.14.1
   mkdir build && cd build
   cmake ..
   echo $ROOT_PASSWD | sudo -S make uninstall
