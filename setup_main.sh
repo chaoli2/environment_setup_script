@@ -11,6 +11,7 @@ else
   echo "Set sudo password to $ROOT_PASSWD"
 fi
 
+basedir=$(PWD)
 echo "Begin Environment Setup"
 
 #Get Config Parameters
@@ -124,7 +125,7 @@ if [ "$PREREQUISITE" == "1" ]; then
   echo "===================Installing Prerequisite...======================="
   echo $ROOT_PASSWD | sudo -S rm -f /var/lib/apt/lists/lock /var/lib/dpkg/lock /var/cache/apt/archives/lock
   echo $ROOT_PASSWD | sudo -S apt-get update
-  echo $ROOT_PASSWD | sudo -S apt-get install -y cmake git vim tree htop wget python-pip python3-pip rpm
+  echo $ROOT_PASSWD | sudo -S apt-get install -y cmake git vim tree htop wget python-pip python3-pip rpm curl
   git config --global user.name "Chao Li"
   git config --global user.email "chao1.li@intel.com"
   git config --global core.editor vim
@@ -180,55 +181,30 @@ if [ "$ROS2_SRC" == "1" ]; then
   echo $ROOT_PASSWD | sudo -S update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
   export LANG=en_US.UTF-8
 
-  #echo $ROOT_PASSWD | sudo -S apt update && sudo apt install -y build-essential git  python3-colcon-common-extensions python3-pip python-rosdep python3-vcstool wget
-  #echo $ROOT_PASSWD | sudo -S -H python3 -m pip install -U argcomplete flake8 flake8-blind-except flake8-builtins flake8-class-newline flake8-comprehensions flake8-deprecated flake8-docstrings \
-  #  flake8-import-order flake8-quotes pytest-repeat pytest-rerunfailures
-  #python3 -m pip install -U pytest pytest-cov pytest-runner setuptools
-  #echo $ROOT_PASSWD | sudo -S apt install --no-install-recommends -y libasio-dev libtinyxml2-dev
+  echo $ROOT_PASSWD | sudo -S apt-get update && sudo apt-get install -y curl
+  curl http://repo.ros2.org/repos.key | sudo apt-key add -
+  echo $ROOT_PASSWD | sudo -S sh -c 'echo "deb [arch=amd64,arm64] http://repo.ros2.org/ubuntu/main `lsb_release -cs` main" > /etc/apt/sources.list.d/ros2-latest.list'
+  echo $ROOT_PASSWD | sudo -S apt-get update && sudo apt-get install -y build-essential cmake git python3-colcon-common-extensions python3-pip python-rosdep python3-vcstool wget
 
-  echo $ROOT_PASSWD | sudo -S sh -c 'echo "deb http://packages.ros.org/ros/ubuntu `lsb_release -cs` main" > /etc/apt/sources.list.d/ros-latest.list'
-  echo $ROOT_PASSWD | sudo -S apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys 421C365BD9FF1F717815A3895523BAEEB01FA116
+# install some pip packages needed for testing
+  echo $ROOT_PASSWD | sudo -S -H python3 -m pip install -U argcomplete flake8 flake8-blind-except flake8-builtins flake8-class-newline flake8-comprehensions flake8-deprecated flake8-docstrings flake8-import-order flake8-quotes pytest-repeat pytest-rerunfailures
 
-  echo $ROOT_PASSWD | sudo -S apt-get update
-  echo $ROOT_PASSWD | sudo -S apt-get install -y git wget
-  echo $ROOT_PASSWD | sudo -S apt-get install -y build-essential cppcheck cmake python-empy python3-catkin-pkg-modules python3-dev python3-empy python3-nose python3-pip python3-pyparsing python3-setuptools python3-vcstool python3-yaml libtinyxml-dev libeigen3-dev libassimp-dev libpoco-dev
-  echo $ROOT_PASSWD | sudo -S apt-get install -y python3-colcon-common-extensions
+  python3 -m pip install -U pytest pytest-cov pytest-runner setuptools
+  echo $ROOT_PASSWD | sudo -S apt-get install --no-install-recommends -y libasio-dev libtinyxml2-dev
 
-  # dependencies for testing
-  echo $ROOT_PASSWD | sudo -S apt-get install -y clang-format pydocstyle pyflakes python3-coverage python3-mock python3-pep8 uncrustify
-
-  # Install argcomplete for command-line tab completion from the ROS2 tools.
-  # Install from pip rather than from apt because of a bug in the Ubuntu 16.04 version of argcomplete:
-  echo $ROOT_PASSWD | sudo -S -H python3 -m pip install argcomplete
-
-  # additional testing dependencies from pip (because not available on ubuntu 16.04)
-  echo $ROOT_PASSWD | sudo -S -H python3 -m pip install flake8 flake8-blind-except flake8-builtins flake8-class-newline flake8-comprehensions flake8-deprecated flake8-docstrings flake8-import-order flake8-quotes pytest pytest-cov pytest-runner
-
-  # additional pytest plugins unavailable from Debian
-  echo $ROOT_PASSWD | sudo -S -H python3 -m pip install pytest-repeat pytest-rerunfailures
-
-  # dependencies for FastRTPS
-  echo $ROOT_PASSWD | sudo -S apt-get install -y libasio-dev libtinyxml2-dev
-
-  # dependencies for RViz
-  echo $ROOT_PASSWD | sudo -S apt-get install -y libcurl4-openssl-dev libqt5core5a libqt5gui5 libqt5opengl5 libqt5widgets5 libxaw7-dev libgles2-mesa-dev libglu1-mesa-dev qtbase5-dev
-
-  cd /usr/lib/x86_64-linux-gnu
-  #if [ ! -f "libboost_python3.so" ]; then
-  #  echo "Creating soft link..."
-  #  echo $ROOT_PASSWD | sudo -S ln -s libboost_python-py35.so libboost_python3.so
-  #else
-  #  echo "soft link already exists, skip..."
-  #fi
-  echo $ROOT_PASSWD | sudo -S rm -f libboost_python3.so
-  echo $ROOT_PASSWD | sudo -S ln -s libboost_python-py35.so libboost_python3.so
+  #cd /usr/lib/x86_64-linux-gnu
+  #echo $ROOT_PASSWD | sudo -S rm -f libboost_python3.so
+  #echo $ROOT_PASSWD | sudo -S ln -s libboost_python-py35.so libboost_python3.so
 
   mkdir -p ~/ros2_ws/src
   cd ~/ros2_ws
   wget https://raw.githubusercontent.com/ros2/ros2/master/ros2.repos
   vcs-import src < ros2.repos
 
-  colcon build --symlink-install
+  echo $ROOT_PASSWD | sudo -S rosdep init
+  rosdep update
+  rosdep install --from-paths src --ignore-src --rosdistro bouncy -y --skip-keys "console_bridge fastcdr fastrtps libopensplice67 rti-connext-dds-5.3.1 urdfdom_headers"
+  #colcon build --symlink-install
 
 fi
 
@@ -389,7 +365,7 @@ fi
 
 # Setup OPENVINO
 if [ "$OPENVINO" == "1" ]; then
-  cd ~/Download
+  cd ~/Downloads
   wget http://registrationcenter-download.intel.com/akdlm/irc_nas/13521/l_openvino_toolkit_p_2018.3.343.tgz
   tar -xvf l_openvino_toolkit_p_2018.3.343.tgz
   cd l_openvino_toolkit_p_2018.3.343
