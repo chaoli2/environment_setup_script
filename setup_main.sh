@@ -109,6 +109,7 @@ if [ "$NETWORK_PROXY" == "1" ]; then
   echo $ROOT_PASSWD | sudo -S touch /etc/apt/apt.conf.d/10proxy
   echo $ROOT_PASSWD | sudo -S sh -c  'echo "Acquire::http::proxy \"http://child-prc.intel.com:913\";" > /etc/apt/apt.conf.d/10proxy'
   echo $ROOT_PASSWD | sudo -S cp ./config/sudoers /etc/
+  source ~/.bashrc
 fi
 
 if [ "$PIP_PROXY" == "1" ]; then
