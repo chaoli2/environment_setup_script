@@ -205,7 +205,7 @@ if [ "$ROS2_SRC" == "1" ]; then
   echo $ROOT_PASSWD | sudo -S rosdep init
   rosdep update
   rosdep install --from-paths src --ignore-src --rosdistro bouncy -y --skip-keys "console_bridge fastcdr fastrtps libopensplice67 rti-connext-dds-5.3.1 urdfdom_headers"
-  #colcon build --symlink-install
+  colcon build --symlink-install
 
 fi
 
@@ -368,6 +368,7 @@ fi
 if [ "$OPENVINO" == "1" ]; then
   cd ~/Downloads
   wget http://registrationcenter-download.intel.com/akdlm/irc_nas/13521/l_openvino_toolkit_p_2018.3.343.tgz
+  #wget http://registrationcenter-download.intel.com/akdlm/irc_nas/13522/l_openvino_toolkit_fpga_p_2018.3.343.tgz
   tar -xvf l_openvino_toolkit_p_2018.3.343.tgz
   cd l_openvino_toolkit_p_2018.3.343
   echo $ROOT_PASSWD | sudo -S ./install_cv_sdk_dependencies.sh
