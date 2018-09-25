@@ -212,10 +212,10 @@ fi
 # Setup OpenCV
 if [ "$OPENCV" == "1" ]; then
   echo "===================Installing OpenCV3 from Source...======================="
-  echo $ROOT_PASSWD | sudo -S apt-get install -y build-essential
-  echo $ROOT_PASSWD | sudo -S apt-get install -y cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev 
+  #echo $ROOT_PASSWD | sudo -S apt-get install -y build-essential
+  #echo $ROOT_PASSWD | sudo -S apt-get install -y cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev 
   # add HTTPS protocol support
-  echo $ROOT_PASSWD | sudo -S apt-get install -y libcurl4-gnutls-dev zlib1g-dev
+  #echo $ROOT_PASSWD | sudo -S apt-get install -y libcurl4-gnutls-dev zlib1g-dev
 
   mkdir -p ~/workspace/libraries && cd ~/workspace/libraries
   echo "begin clone opencv"
@@ -223,30 +223,33 @@ if [ "$OPENCV" == "1" ]; then
   git clone https://github.com/opencv/opencv_contrib.git
   echo "finish clone opencv"
 
-  cd ~/Desktop
-  if [ -f "/home/intel/Desktop/ippicv_2017u2_lnx_intel64_20170418.tgz" ]; then
-    echo "=======ippicv already existed, checking md5..."
-    md5=`md5sum ippicv_2017u2_lnx_intel64_20170418.tgz`
-    if [ "$md5" != "87cbdeb627415d8e4bc811156289fa3a  ippicv_2017u2_lnx_intel64_20170418.tgz" ]; then
-      echo "=======md5 incorrect, updating...========"
-      rm ippicv_2017u2_lnx_intel64_20170418.tgz
-      wget https://raw.githubusercontent.com/opencv/opencv_3rdparty/a62e20676a60ee0ad6581e217fe7e4bada3b95db/ippicv/ippicv_2017u2_lnx_intel64_20170418.tgz
-    else
-      echo "=======md5 correct, continue...=========="
-    fi
-  else
-    echo "==========ippicv file no exist============"
-    ls /home/intel/Desktop
-    wget https://raw.githubusercontent.com/opencv/opencv_3rdparty/a62e20676a60ee0ad6581e217fe7e4bada3b95db/ippicv/ippicv_2017u2_lnx_intel64_20170418.tgz
-  fi
+  #cd ~/Desktop
+  #if [ -f "/home/intel/Desktop/ippicv_2017u2_lnx_intel64_20170418.tgz" ]; then
+  #  echo "=======ippicv already existed, checking md5..."
+  #  md5=`md5sum ippicv_2017u2_lnx_intel64_20170418.tgz`
+  #  if [ "$md5" != "87cbdeb627415d8e4bc811156289fa3a  ippicv_2017u2_lnx_intel64_20170418.tgz" ]; then
+  #    echo "=======md5 incorrect, updating...========"
+  #    rm ippicv_2017u2_lnx_intel64_20170418.tgz
+  #    wget https://raw.githubusercontent.com/opencv/opencv_3rdparty/a62e20676a60ee0ad6581e217fe7e4bada3b95db/ippicv/ippicv_2017u2_lnx_intel64_20170418.tgz
+  #  else
+  #    echo "=======md5 correct, continue...=========="
+  #  fi
+  #else
+  #  echo "==========ippicv file no exist============"
+  #  ls /home/intel/Desktop
+  #  wget https://raw.githubusercontent.com/opencv/opencv_3rdparty/a62e20676a60ee0ad6581e217fe7e4bada3b95db/ippicv/ippicv_2017u2_lnx_intel64_20170418.tgz
+  #fi
 
-  mkdir ~/workspace/libraries/opencv/.cache/ippicv/ -p
-  mv ippicv_2017u2_lnx_intel64_20170418.tgz ~/workspace/libraries/opencv/.cache/ippicv/87cbdeb627415d8e4bc811156289fa3a-ippicv_2017u2_lnx_intel64_20170418.tgz
+  #mkdir ~/workspace/libraries/opencv/.cache/ippicv/ -p
+  #mv ippicv_2017u2_lnx_intel64_20170418.tgz ~/workspace/libraries/opencv/.cache/ippicv/87cbdeb627415d8e4bc811156289fa3a-ippicv_2017u2_lnx_intel64_20170418.tgz
 
   cd ~/workspace/libraries/opencv
-  git checkout 3.3.0
+  git checkout 3.4.0
   cd ~/workspace/libraries/opencv_contrib
-  git checkout 3.3.0
+  git checkout 3.4.0
+
+  rm -rf ~/workspace/libraries/opencv/.cache
+  cp -r ~/Downloads/cache ~/workspace/libraries/opencv/.cache
 
   cd ~/workspace/libraries/opencv
   mkdir build && cd build
