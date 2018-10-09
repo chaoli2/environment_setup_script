@@ -71,6 +71,10 @@ OPENVINO=`cat modules.conf | grep 'openvino'`
 OPENVINO=${OPENVINO##*=}
 echo "Set OPENVINO to $OPENVINO"
 
+PYCAFFE=`cat modules.conf | grep 'pycaffe'`
+PYCAFFE=${PYCAFFE##*=}
+echo "Set PYCAFFE to $PYCAFFE"
+
 # Clean Existing Directories
 if [ "$CLEAN" == "1" ]; then
   echo "===================Cleaning...===================================="
@@ -108,7 +112,7 @@ if [ "$NETWORK_PROXY" == "1" ]; then
 
   echo $ROOT_PASSWD | sudo -S touch /etc/apt/apt.conf.d/10proxy
   echo $ROOT_PASSWD | sudo -S sh -c  'echo "Acquire::http::proxy \"http://child-prc.intel.com:913\";" > /etc/apt/apt.conf.d/10proxy'
-  echo $ROOT_PASSWD | sudo -S cp ./config/sudoers /etc/
+  echo $ROOT_PASSWD | sudo -S cp $basedir/config/network/sudoers /etc/
   source ~/.bashrc
 fi
 
@@ -116,8 +120,8 @@ if [ "$PIP_PROXY" == "1" ]; then
   echo "===================Setting PIP Proxy...======================="
   mkdir -p ~/.pip
   echo $ROOT_PASSWD | sudo -S mkdir -p /root/.pip
-  cp ./config/pip.conf ~/.pip
-  echo $ROOT_PASSWD | sudo -S cp ./config/pip.conf /root/.pip
+  cp $basedir/config/network/pip.conf ~/.pip
+  echo $ROOT_PASSWD | sudo -S cp $basedir/config/pip.conf /root/.pip
   echo "Network proxy setup done"
 fi
 
@@ -335,7 +339,7 @@ if [ "$CLCAFFE" == "1" ]; then
   tar xvf l_mkl_2018.3.222.tgz
 
   cd l_mkl_2018.3.222
-  cp $basedir/config/mkl_silent.cfg .
+  cp $basedir/config/mkl/mkl_silent.cfg .
   echo $ROOT_PASSWD | sudo -S ./install.sh --silent mkl_silent.cfg
   echo "Intel MKL installed"
   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/intel/mkl/lib/intel64_lin/
@@ -385,6 +389,32 @@ if [ "$OPENVINO" == "1" ]; then
     echo "openvino already set, skip..."
   fi
 
+fi
+
+# Setup Caffe on Python3
+if [ "$PYCAFFE" == "1" ]; then
+  echo $ROOT_PASSWD | sudo -S apt-get install -y libprotobuf-dev libleveldb-dev libsnappy-dev libopencv-dev libhdf5-serial-dev protobuf-compiler python3-skimage
+  echo $ROOT_PASSWD | sudo -S apt-get install -y --no-install-recommends libboost-all-dev
+  echo $ROOT_PASSWD | sudo -S apt-get install -y libhdf5-dev libgflags-dev libgoogle-glog-dev liblmdb-dev libatlas-base-dev
+  echo $ROOT_PASSWD | sudo -S pip3 install numpy protobuf
+
+  cd /usr/lib/x86_64-linux-gnu
+  echo $ROOT_PASSWD | sudo -S rm -f libboost_python3.so
+  echo $ROOT_PASSWD | sudo -S ln -s libboost_python-py35.so libboost_python3.so
+
+  mkdir -p ~/workspace/libraries && cd ~/workspace/libraries
+  git clone https://github.com/BVLC/caffe
+  cd caffe
+  cp $basedir/config/caffe/Makefile.config Makefile.config
+  cp $basedir/config/caffe/Makefile Makefile
+
+  make all
+  make test
+  make runtest
+  echo $ROOT_PASSWD | sudo -S cp build/lib/libcaffe.so* /usr/lib
+
+  make pycaffe
+  echo $ROOT_PASSWD | sudo -S cp -r python/caffe/ /usr/local/lib/python3.5/dist-packages/
 fi
 
 #rm -rf ~/catkin_ws
