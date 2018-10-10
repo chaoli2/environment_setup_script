@@ -121,7 +121,7 @@ if [ "$PIP_PROXY" == "1" ]; then
   mkdir -p ~/.pip
   echo $ROOT_PASSWD | sudo -S mkdir -p /root/.pip
   cp $basedir/config/network/pip.conf ~/.pip
-  echo $ROOT_PASSWD | sudo -S cp $basedir/config/pip.conf /root/.pip
+  echo $ROOT_PASSWD | sudo -S cp $basedir/config/network/pip.conf /root/.pip
   echo "Network proxy setup done"
 fi
 
@@ -405,6 +405,8 @@ if [ "$PYCAFFE" == "1" ]; then
   mkdir -p ~/workspace/libraries && cd ~/workspace/libraries
   git clone https://github.com/BVLC/caffe
   cd caffe
+  
+  #Makefile
   cp $basedir/config/caffe/Makefile.config Makefile.config
   cp $basedir/config/caffe/Makefile Makefile
 
