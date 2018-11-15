@@ -419,6 +419,13 @@ if [ "$PYCAFFE" == "1" ]; then
   echo $ROOT_PASSWD | sudo -S cp -r python/caffe/ /usr/local/lib/python3.5/dist-packages/
 fi
 
+# Setup Moeditor from debian
+  cd ~/Download
+  wget -c https://github.com/Moeditor/Moeditor/releases/download/v0.2.0-beta/moeditor_0.2.0-1_amd64.deb
+  echo $ROOT_PASSWD | sudo -S dpkg -i moeditor_0.2.0-1_amd64.deb
+
+
+
 #rm -rf ~/catkin_ws
 #mkdir -p ~/catkin_ws/src
 #cd ~/catkin_ws/src
