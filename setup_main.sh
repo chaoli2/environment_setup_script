@@ -208,7 +208,14 @@ if [ "$ROS2_SRC" == "1" ]; then
 
   #echo $ROOT_PASSWD | sudo -S rosdep init
   #rosdep update
-  rosdep install --from-paths src --ignore-src --rosdistro bouncy -y --skip-keys "console_bridge fastcdr fastrtps libopensplice67 rti-connext-dds-5.3.1 urdfdom_headers"
+  echo $ROOT_PASSWD | sudo -S apt-get install -y build-essential cmake git python3-colcon-common-extensions python3-pip python-rosdep python3-vcstool wget
+
+
+  echo $ROOT_PASSWD | sudo -S apt-get install -y --no-install-recommends libeigen3-dev libtinyxml2-dev qtbase5-dev libfreetype6 libfreetype6-dev libyaml-dev libconsole-bridge-dev libcurl4-openssl-dev curl  libxaw7-dev libcppunit-dev libpcre3-dev cmake clang-format libgl1-mesa-dev libglu1-mesa-dev python3-flake8 pyflakes3 cppcheck libxrandr-dev libqt5core5a libqt5widgets5 python-mock python3-pkg-resources libxml2-utils libopencv-dev libtinyxml-dev python3-yaml uncrustify libqt5opengl5 python3-mock python3-pytest openssl python3-pep8 libassimp-dev libpoco-dev pydocstyle zlib1g-dev python3-empy libx11-dev libqt5gui5 python3-setuptools python3-catkin-pkg-modules pkg-config libasio-dev libtinyxml2-dev
+
+  echo $ROOT_PASSWD | sudo -S python3 -m pip install -U argcomplete flake8 flake8-blind-except flake8-builtins flake8-class-newline flake8-comprehensions flake8-deprecated flake8-docstrings flake8-import-order flake8-quotes pytest-repeat pytest-rerunfailures pytest pytest-cov pytest-runner setuptools
+
+  #rosdep install --from-paths src --ignore-src --rosdistro bouncy -y --skip-keys "console_bridge fastcdr fastrtps libopensplice67 rti-connext-dds-5.3.1 urdfdom_headers"
   colcon build --symlink-install
 
 fi
