@@ -427,7 +427,7 @@ if [ "$PYCAFFE" == "1" ]; then
 fi
 
 # Setup Moeditor from debian
-  cd ~/Download
+  cd ~/Downloads
   wget -c https://github.com/Moeditor/Moeditor/releases/download/v0.2.0-beta/moeditor_0.2.0-1_amd64.deb
   echo $ROOT_PASSWD | sudo -S dpkg -i moeditor_0.2.0-1_amd64.deb
 
