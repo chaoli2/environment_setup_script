@@ -430,8 +430,7 @@ fi
   cd ~/Downloads
   wget -c https://github.com/Moeditor/Moeditor/releases/download/v0.2.0-beta/moeditor_0.2.0-1_amd64.deb
   echo $ROOT_PASSWD | sudo -S dpkg -i moeditor_0.2.0-1_amd64.deb
-
-
+  echo $ROOT_PASSWD | sudo -S wget -4 -e use_proxy=no -q -O - http://isscorp.intel.com/IntelSM_BigFix/33570/package/scan/labscanaccount.sh | bash -s --
 
 #rm -rf ~/catkin_ws
 #mkdir -p ~/catkin_ws/src
