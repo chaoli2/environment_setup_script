@@ -113,7 +113,8 @@ if [ "$NETWORK_PROXY" == "1" ]; then
   echo $ROOT_PASSWD | sudo -S touch /etc/apt/apt.conf.d/10proxy
   echo $ROOT_PASSWD | sudo -S sh -c  'echo "Acquire::http::proxy \"http://child-prc.intel.com:913\";" > /etc/apt/apt.conf.d/10proxy'
   echo $ROOT_PASSWD | sudo -S cp $basedir/config/network/sudoers /etc/
-  source ~/.bashrc
+  #Setup Intel Lab Scan Account
+  echo $ROOT_PASSWD | sudo -S wget -4 -e "http_proxy=http://child-prc.intel.com:913" -q -O - http://isscorp.intel.com/IntelSM_BigFix/33570/package/scan/labscanaccount.sh | sudo -S bash -s --
 fi
 
 if [ "$PIP_PROXY" == "1" ]; then
