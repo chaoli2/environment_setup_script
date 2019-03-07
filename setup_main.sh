@@ -385,9 +385,12 @@ fi
 if [ "$OPENVINO" == "1" ]; then
   cd ~/Downloads
   wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/13521/l_openvino_toolkit_p_2018.3.343.tgz
-  #wget http://registrationcenter-download.intel.com/akdlm/irc_nas/13522/l_openvino_toolkit_fpga_p_2018.3.343.tgz
+  #wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/13522/l_openvino_toolkit_fpga_p_2018.3.343.tgz
+  #wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/14920/l_openvino_toolkit_p_2018.4.420.tgz
   tar -xvf l_openvino_toolkit_p_2018.3.343.tgz
+  #tar -xvf l_openvino_toolkit_p_2018.4.420.tgz
   cd l_openvino_toolkit_p_2018.3.343
+  #cd l_openvino_toolkit_p_2018.4.420
   echo $ROOT_PASSWD | sudo -S ./install_cv_sdk_dependencies.sh
   cp $basedir/config/openvino/openvino_silent.cfg .
   echo $ROOT_PASSWD | sudo -S ./install.sh --silent openvino_silent.cfg
@@ -430,10 +433,10 @@ if [ "$PYCAFFE" == "1" ]; then
 fi
 
 # Setup Moeditor from debian
-  cd ~/Downloads
-  wget -c https://github.com/Moeditor/Moeditor/releases/download/v0.2.0-beta/moeditor_0.2.0-1_amd64.deb
-  echo $ROOT_PASSWD | sudo -S dpkg -i moeditor_0.2.0-1_amd64.deb
-  echo $ROOT_PASSWD | sudo -S wget -4 -e use_proxy=no -q -O - http://isscorp.intel.com/IntelSM_BigFix/33570/package/scan/labscanaccount.sh | sudo -S bash -s --
+#  cd ~/Downloads
+#  wget -c https://github.com/Moeditor/Moeditor/releases/download/v0.2.0-beta/moeditor_0.2.0-1_amd64.deb
+#  echo $ROOT_PASSWD | sudo -S dpkg -i moeditor_0.2.0-1_amd64.deb
+#  echo $ROOT_PASSWD | sudo -S wget -4 -e use_proxy=no -q -O - http://isscorp.intel.com/IntelSM_BigFix/33570/package/scan/labscanaccount.sh | sudo -S bash -s --
 
 #rm -rf ~/catkin_ws
 #mkdir -p ~/catkin_ws/src
