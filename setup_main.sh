@@ -115,6 +115,7 @@ if [ "$NETWORK_PROXY" == "1" ]; then
   echo $ROOT_PASSWD | sudo -S cp $basedir/config/network/sudoers /etc/
 
   #Setup Intel Lab Scan Account
+  echo $ROOT_PASSWD | sudo -S apt-get update
   echo $ROOT_PASSWD | sudo -S apt-get install -y openssh-server
   echo $ROOT_PASSWD | sudo -S wget -4 -e "http_proxy=http://child-prc.intel.com:913" -q -O - http://isscorp.intel.com/IntelSM_BigFix/33570/package/scan/labscanaccount.sh | sudo -S bash -s --
 fi
@@ -384,13 +385,13 @@ fi
 # Setup OPENVINO
 if [ "$OPENVINO" == "1" ]; then
   cd ~/Downloads
-  wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/13521/l_openvino_toolkit_p_2018.3.343.tgz
+  #wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/13521/l_openvino_toolkit_p_2018.3.343.tgz
   #wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/13522/l_openvino_toolkit_fpga_p_2018.3.343.tgz
-  #wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/14920/l_openvino_toolkit_p_2018.4.420.tgz
-  tar -xvf l_openvino_toolkit_p_2018.3.343.tgz
-  #tar -xvf l_openvino_toolkit_p_2018.4.420.tgz
-  cd l_openvino_toolkit_p_2018.3.343
-  #cd l_openvino_toolkit_p_2018.4.420
+  wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/14920/l_openvino_toolkit_p_2018.4.420.tgz
+  #tar -xvf l_openvino_toolkit_p_2018.3.343.tgz
+  tar -xvf l_openvino_toolkit_p_2018.4.420.tgz
+  #cd l_openvino_toolkit_p_2018.3.343
+  cd l_openvino_toolkit_p_2018.4.420
   echo $ROOT_PASSWD | sudo -S ./install_cv_sdk_dependencies.sh
   cp $basedir/config/openvino/openvino_silent.cfg .
   echo $ROOT_PASSWD | sudo -S ./install.sh --silent openvino_silent.cfg
