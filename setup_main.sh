@@ -387,7 +387,9 @@ if [ "$OPENVINO" == "1" ]; then
   cd ~/Downloads
   #wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/13521/l_openvino_toolkit_p_2018.3.343.tgz
   #wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/13522/l_openvino_toolkit_fpga_p_2018.3.343.tgz
-  wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/14920/l_openvino_toolkit_p_2018.4.420.tgz
+  #wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/14920/l_openvino_toolkit_p_2018.4.420.tgz
+  wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/15078/l_openvino_toolkit_p_2018.5.455.tgz
+  wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/15382/l_openvino_toolkit_p_2019.1.094.tgz
   #tar -xvf l_openvino_toolkit_p_2018.3.343.tgz
   tar -xvf l_openvino_toolkit_p_2018.4.420.tgz
   #cd l_openvino_toolkit_p_2018.3.343
