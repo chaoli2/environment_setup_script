@@ -435,6 +435,7 @@ if [ "$PYCAFFE" == "1" ]; then
   echo $ROOT_PASSWD | sudo -S cp -r python/caffe/ /usr/local/lib/python3.5/dist-packages/
 fi
 
+
 # Setup Moeditor from debian
 #  cd ~/Downloads
 #  wget -c https://github.com/Moeditor/Moeditor/releases/download/v0.2.0-beta/moeditor_0.2.0-1_amd64.deb
@@ -453,6 +454,13 @@ fi
 
 #cd ~/catkin_ws
 #catkin_make
+
+
+# Setup VS code
+# sudo add-apt-repository -y ppa:ubuntu-desktop/ubuntu-make
+# sudo apt-get update
+# sudo apt-get install ubuntu-make
+# umake ide visual-studio-code
 
 echo "Environment Setup Done"
 
