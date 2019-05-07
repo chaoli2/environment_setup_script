@@ -457,10 +457,8 @@ fi
 
 
 # Setup VS code
-# sudo add-apt-repository -y ppa:ubuntu-desktop/ubuntu-make
-# sudo apt-get update
-# sudo apt-get install ubuntu-make
-# umake ide visual-studio-code
+# wget https://vscode.cdn.azure.cn/stable/51b0b28134d51361cf996d2f0a1c698247aeabd8/code_1.33.1-1554971066_amd64.deb
+# sudo dpkg -i code_1.33.1-1554971066_amd64.deb
 
 echo "Environment Setup Done"
 
