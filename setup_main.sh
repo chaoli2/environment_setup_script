@@ -186,6 +186,7 @@ fi
 # Setup ROS2 from src
 if [ "$ROS2_SRC" == "1" ]; then
   echo "===================Installing ROS2 from Source...======================="
+  
   echo $ROOT_PASSWD | sudo -S locale-gen en_US en_US.UTF-8
   echo $ROOT_PASSWD | sudo -S update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
   export LANG=en_US.UTF-8
@@ -201,27 +202,25 @@ if [ "$ROS2_SRC" == "1" ]; then
   python3 -m pip install -U pytest pytest-cov pytest-runner setuptools
   echo $ROOT_PASSWD | sudo -S apt-get install --no-install-recommends -y libasio-dev libtinyxml2-dev
 
-  #cd /usr/lib/x86_64-linux-gnu
-  #echo $ROOT_PASSWD | sudo -S rm -f libboost_python3.so
-  #echo $ROOT_PASSWD | sudo -S ln -s libboost_python-py35.so libboost_python3.so
-
   mkdir -p ~/ros2_ws/src
   cd ~/ros2_ws
-  wget https://raw.githubusercontent.com/ros2/ros2/bouncy/ros2.repos
+  wget https://raw.githubusercontent.com/ros2/ros2/crystal/ros2.repos
   vcs-import src < ros2.repos
 
-  #echo $ROOT_PASSWD | sudo -S rosdep init
-  #rosdep update
-  echo $ROOT_PASSWD | sudo -S apt-get install -y build-essential cmake git python3-colcon-common-extensions python3-pip python-rosdep python3-vcstool wget
+  if [ ! -f "/etc/ros/rosdep/sources.list.d/20-default.list" ]; then
+    echo $ROOT_PASSWD | sudo -S rosdep init
+  else
+    echo "file already exists, skip..."
+  fi
 
-
-  echo $ROOT_PASSWD | sudo -S apt-get install -y --no-install-recommends libeigen3-dev libtinyxml2-dev qtbase5-dev libfreetype6 libfreetype6-dev libyaml-dev libconsole-bridge-dev libcurl4-openssl-dev curl  libxaw7-dev libcppunit-dev libpcre3-dev cmake clang-format libgl1-mesa-dev libglu1-mesa-dev python3-flake8 pyflakes3 cppcheck libxrandr-dev libqt5core5a libqt5widgets5 python-mock python3-pkg-resources libxml2-utils libopencv-dev libtinyxml-dev python3-yaml uncrustify libqt5opengl5 python3-mock python3-pytest openssl python3-pep8 libassimp-dev libpoco-dev pydocstyle zlib1g-dev python3-empy libx11-dev libqt5gui5 python3-setuptools python3-catkin-pkg-modules pkg-config libasio-dev libtinyxml2-dev
-
-  echo $ROOT_PASSWD | sudo -S python3 -m pip install -U argcomplete flake8 flake8-blind-except flake8-builtins flake8-class-newline flake8-comprehensions flake8-deprecated flake8-docstrings flake8-import-order flake8-quotes pytest-repeat pytest-rerunfailures pytest pytest-cov pytest-runner setuptools
-
-  #rosdep install --from-paths src --ignore-src --rosdistro bouncy -y --skip-keys "console_bridge fastcdr fastrtps libopensplice67 rti-connext-dds-5.3.1 urdfdom_headers"
-  colcon build --symlink-install
-
+  rosdep update
+  if [ $system_ver = "16.04" ]; then
+    rosdep install --from-paths src --ignore-src --rosdistro crystal -y --skip-keys "console_bridge fastcdr fastrtps libopensplice67 libopensplice69 python3-lark-parser rti-connext-dds-5.3.1 urdfdom_headers"
+    colcon build --symlink-install --packages-ignore qt_gui_cpp rqt_gui_cpp
+  else
+    rosdep install --from-paths src --ignore-src --rosdistro crystal -y --skip-keys "console_bridge fastcdr fastrtps libopensplice67 libopensplice69 rti-connext-dds-5.3.1 urdfdom_headers"
+    colcon build --symlink-install
+  fi
 fi
 
 # Setup OpenCV
