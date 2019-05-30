@@ -1,0 +1,32 @@
+sudo swupd mirror -s http://linux-ftp.sh.intel.com/pub/mirrors/clearlinux/update/
+sudo swupd bundle-add desktop desktop-dev
+sudo swupd bundle-add os-testsuite-0day   // for libXaw-dev
+sudo swupd bundle-add machine-learning-basic    // for eigen-dev
+sudo swupd bundle-add devpkg-apr-util
+
+# ROS2 Readiness
+sudo -H pip3 --proxy http://child-prc.intel.com:913 install vcstool
+
+# the latest release
+$ wget https://raw.githubusercontent.com/ros2/ros2/release-latest/ros2.repos
+$ cd ~/workspace/devel/crystal && vcs-import src < ros2.repos
+
+# master branch, pls ignore if you only need the latest release
+$ wget https://raw.githubusercontent.com/ros2/ros2/master/ros2.repos
+vcs-import master < ros2.repos
+
+sudo -H pip3 --proxy http://child-prc.intel.com:913 install EmPy pytest-runner pydocstyle pyflakes argcomplete flake8 flake8-import-order
+
+sudo -H pip3 --proxy http://child-prc.intel.com:913 install colcon-ros-bundle colcon-common-extensions
+
+# manually build and install those third-party packages which are missing in the clearlinux
+# now you need to build [asio,tinyxml2,logg4cxx] and they're underneath path "/home/intel/workspace/devel/deps"
+
+
+
+// currently, rqt and rviz2 are disabled due to missing dependent packages
+colcon build --symlink-install --packages-skip qt_gui_cpp rviz_rendering rviz_rendering_tests qt_gui_core rqt_gui_cpp rviz_common rviz_visual_testing_framework rviz_default_plugins rqt rviz2
+
+// disable rqt stuff only
+colcon build --symlink-install --packages-skip qt_gui_cpp qt_gui_core rqt_gui_cpp rqt
+
