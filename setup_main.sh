@@ -194,6 +194,7 @@ if [ "$ROS2_SRC" == "1" ]; then
   echo $ROOT_PASSWD | sudo -S apt-get update && sudo apt-get install -y curl
   curl http://repo.ros2.org/repos.key | sudo apt-key add -
   echo $ROOT_PASSWD | sudo -S sh -c 'echo "deb [arch=amd64,arm64] http://repo.ros2.org/ubuntu/main `lsb_release -cs` main" > /etc/apt/sources.list.d/ros2-latest.list'
+  echo $ROOT_PASSWD | sudo -S apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --keyserver-options http-proxy="$http_proxy" --recv-key F42ED6FBAB17C654
   echo $ROOT_PASSWD | sudo -S apt-get update && sudo apt-get install -y build-essential cmake git python3-colcon-common-extensions python3-pip python-rosdep python3-vcstool wget
 
 # install some pip packages needed for testing
