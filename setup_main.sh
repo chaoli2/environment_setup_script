@@ -181,6 +181,21 @@ fi
 # Setup ROS2 from Debian
 if [ "$ROS2_DEBIAN" == "1" ]; then
   echo "===================Installing ROS2 from Debian Package...======================="
+
+  echo $ROOT_PASSWD | sudo -S locale-gen en_US en_US.UTF-8
+  echo $ROOT_PASSWD | sudo -S update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+  export LANG=en_US.UTF-8
+
+  echo $ROOT_PASSWD | sudo -S apt update
+  echo $ROOT_PASSWD | sudo -S apt install -y curl gnupg2 lsb-release
+
+  curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
+  echo $ROOT_PASSWD | sudo -s sh -c 'echo "deb [arch=amd64,arm64] http://packages.ros.org/ros2/ubuntu `lsb_release -cs` main" > /etc/apt/sources.list.d/ros2-latest.list'
+  echo $ROOT_PASSWD | sudo -S apt update
+  echo $ROOT_PASSWD | sudo -S apt install -y ros-dashing-desktop
+
+  echo $ROOT_PASSWD | sudo apt install -y python3-argcomplete
+  echo "source /opt/ros/dashing/setup.bash" >> ~/.bashrc
 fi
 
 # Setup ROS2 from src
