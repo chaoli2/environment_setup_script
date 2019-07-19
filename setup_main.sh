@@ -196,6 +196,8 @@ if [ "$ROS2_DEBIAN" == "1" ]; then
 
   echo $ROOT_PASSWD | sudo apt install -y python3-argcomplete
   echo "source /opt/ros/dashing/setup.bash" >> ~/.bashrc
+
+  echo $ROOT_PASSWD | sudo -S apt install python3-colcon-common-extensions
 fi
 
 # Setup ROS2 from src
@@ -278,8 +280,8 @@ if [ "$OPENCV" == "1" ]; then
   cd ~/workspace/libraries/opencv_contrib
   git checkout 3.4.0
 
-  rm -rf ~/workspace/libraries/opencv/.cache
-  cp -r ~/Downloads/cache ~/workspace/libraries/opencv/.cache
+  #rm -rf ~/workspace/libraries/opencv/.cache
+  #cp -r ~/Downloads/cache ~/workspace/libraries/opencv/.cache
 
   cd ~/workspace/libraries/opencv
   mkdir build && cd build
@@ -314,7 +316,7 @@ if [ "$LIBREALSENSE" == "1" ]; then
   mkdir -p ~/workspace/libraries && cd ~/workspace/libraries
   git clone https://github.com/IntelRealSense/librealsense
   cd ~/workspace/libraries/librealsense
-  git checkout v2.14.1
+  git checkout v2.21.0
   mkdir build && cd build
   cmake ..
   echo $ROOT_PASSWD | sudo -S make uninstall
@@ -403,13 +405,13 @@ if [ "$OPENVINO" == "1" ]; then
   #wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/13521/l_openvino_toolkit_p_2018.3.343.tgz
   #wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/13522/l_openvino_toolkit_fpga_p_2018.3.343.tgz
   #wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/14920/l_openvino_toolkit_p_2018.4.420.tgz
-  wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/15078/l_openvino_toolkit_p_2018.5.455.tgz
+  #wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/15078/l_openvino_toolkit_p_2018.5.455.tgz
   wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/15382/l_openvino_toolkit_p_2019.1.094.tgz
   #tar -xvf l_openvino_toolkit_p_2018.3.343.tgz
-  tar -xvf l_openvino_toolkit_p_2018.4.420.tgz
+  tar -xvf l_openvino_toolkit_p_2019.1.094.tgz
   #cd l_openvino_toolkit_p_2018.3.343
-  cd l_openvino_toolkit_p_2018.4.420
-  echo $ROOT_PASSWD | sudo -S ./install_cv_sdk_dependencies.sh
+  cd l_openvino_toolkit_p_2019.1.094
+  echo $ROOT_PASSWD | sudo -S ./install_openvino_dependencies.sh
   cp $basedir/config/openvino/openvino_silent.cfg .
   echo $ROOT_PASSWD | sudo -S ./install.sh --silent openvino_silent.cfg
 
