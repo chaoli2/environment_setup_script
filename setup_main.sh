@@ -176,6 +176,22 @@ fi
 # Setup ROS from Src
 if [ "$ROS_SRC" == "1" ]; then
   echo "===================Installing ROS from Source...======================="
+  echo $ROOT_PASSWD | sudo -S apt-get install -y python-rosdep python-rosinstall-generator python-wstool python-rosinstall build-essential
+
+  if [ ! -f "/etc/ros/rosdep/sources.list.d/20-default.list" ]; then
+    echo $ROOT_PASSWD | sudo -S rosdep init
+  else
+    echo "file already exists, skip..."
+  fi
+
+  rosdep update
+
+  mkdir ~/ros_catkin_ws -p
+  cd ~/ros_catkin_ws
+  rosinstall_generator desktop_full --rosdistro melodic --deps --tar > melodic-desktop-full.rosinstall
+  wstool init -j8 src melodic-desktop-full.rosinstall
+  rosdep install --from-paths src --ignore-src --rosdistro melodic -y
+  ./src/catkin/bin/catkin_make_isolated --install -DCMAKE_BUILD_TYPE=Release
 fi
 
 # Setup ROS2 from Debian
