@@ -213,7 +213,7 @@ if [ "$ROS2_DEBIAN" == "1" ]; then
   echo $ROOT_PASSWD | sudo apt install -y python3-argcomplete
   echo "source /opt/ros/dashing/setup.bash" >> ~/.bashrc
 
-  echo $ROOT_PASSWD | sudo -S apt install python3-colcon-common-extensions
+  echo $ROOT_PASSWD | sudo -S apt install -y python3-colcon-common-extensions
 fi
 
 # Setup ROS2 from src
