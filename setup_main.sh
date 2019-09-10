@@ -134,7 +134,7 @@ if [ "$PREREQUISITE" == "1" ]; then
   echo "===================Installing Prerequisite...======================="
   echo $ROOT_PASSWD | sudo -S rm -f /var/lib/apt/lists/lock /var/lib/dpkg/lock /var/cache/apt/archives/lock
   echo $ROOT_PASSWD | sudo -S apt-get update
-  echo $ROOT_PASSWD | sudo -S apt-get install -y cmake git vim tree htop wget python-pip python3-pip rpm curl
+  echo $ROOT_PASSWD | sudo -S apt-get install -y cmake git vim tree htop wget python-pip python3-pip rpm curl terminator
   git config --global user.name "Chao Li"
   git config --global user.email "chao1.li@intel.com"
   git config --global core.editor vim
@@ -332,7 +332,7 @@ if [ "$LIBREALSENSE" == "1" ]; then
   mkdir -p ~/workspace/libraries && cd ~/workspace/libraries
   git clone https://github.com/IntelRealSense/librealsense
   cd ~/workspace/libraries/librealsense
-  git checkout v2.21.0
+  git checkout v2.27.0
   mkdir build && cd build
   cmake ..
   echo $ROOT_PASSWD | sudo -S make uninstall
