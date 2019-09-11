@@ -132,6 +132,7 @@ fi
 # Setup Prerequisite
 if [ "$PREREQUISITE" == "1" ]; then
   echo "===================Installing Prerequisite...======================="
+  export DEBIAN_FRONTEND=noninteractive
   echo $ROOT_PASSWD | sudo -S rm -f /var/lib/apt/lists/lock /var/lib/dpkg/lock /var/cache/apt/archives/lock
   echo $ROOT_PASSWD | sudo -S apt-get update
   echo $ROOT_PASSWD | sudo -S apt-get install -y cmake git vim tree htop wget python-pip python3-pip rpm curl terminator
@@ -422,7 +423,8 @@ if [ "$OPENVINO" == "1" ]; then
   #wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/13522/l_openvino_toolkit_fpga_p_2018.3.343.tgz
   #wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/14920/l_openvino_toolkit_p_2018.4.420.tgz
   #wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/15078/l_openvino_toolkit_p_2018.5.455.tgz
-  wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/15382/l_openvino_toolkit_p_2019.1.094.tgz
+  #wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/15382/l_openvino_toolkit_p_2019.1.094.tgz
+  wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/15512/l_openvino_toolkit_p_2019.1.144.tgz
   #tar -xvf l_openvino_toolkit_p_2018.3.343.tgz
   tar -xvf l_openvino_toolkit_p_2019.1.094.tgz
   #cd l_openvino_toolkit_p_2018.3.343
