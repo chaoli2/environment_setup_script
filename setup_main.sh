@@ -135,7 +135,7 @@ if [ "$PREREQUISITE" == "1" ]; then
   export DEBIAN_FRONTEND=noninteractive
   echo $ROOT_PASSWD | sudo -S rm -f /var/lib/apt/lists/lock /var/lib/dpkg/lock /var/cache/apt/archives/lock
   echo $ROOT_PASSWD | sudo -S apt-get update
-  echo $ROOT_PASSWD | sudo -S apt-get install -y cmake git vim tree htop wget python-pip python3-pip rpm curl terminator
+  echo $ROOT_PASSWD | sudo -S apt-get install -y libssl-dev cmake git vim tree htop wget python-pip python3-pip rpm curl terminator
   git config --global user.name "Chao Li"
   git config --global user.email "chao1.li@intel.com"
   git config --global core.editor vim
