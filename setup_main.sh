@@ -302,7 +302,7 @@ if [ "$OPENCV" == "1" ]; then
 
   cd ~/workspace/libraries/opencv
   mkdir build && cd build
-  cmake -DOPENCV_EXTRA_MODULES_PATH=/home/intel/workspace/libraries/opencv_contrib/modules -DCMAKE_INSTALL_PREFIX=/usr/local -DBUILD_opencv_cnn_3dobj=OFF ..
+  cmake -DOPENCV_EXTRA_MODULES_PATH=/home/intel/workspace/libraries/opencv_contrib/modules -DCMAKE_INSTALL_PREFIX=/usr/local -DBUILD_opencv_cnn_3dobj=OFF -DBUILD_opencv_face=OFF -DBUILD_opencv_face=OFF ..
   make -j4
   echo $ROOT_PASSWD | sudo -S make install
   echo $ROOT_PASSWD | sudo -S ldconfig
