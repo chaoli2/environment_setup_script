@@ -146,10 +146,10 @@ fi
 if [ "$ROS_DEBIAN" == "1" ]; then
   echo "===================Installing ROS from Debian Package...======================="
   echo $ROOT_PASSWD | sudo -S sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
-  echo $ROOT_PASSWD | sudo -S apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
+  echo $ROOT_PASSWD | sudo -S apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --keyserver-options http-proxy="$http_proxy" --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
 
   echo $ROOT_PASSWD | sudo -S apt-get update
-  echo $ROOT_PASSWD | sudo -S apt-get install -y ros-kinetic-desktop-full
+  echo $ROOT_PASSWD | sudo -S apt-get install -y ros-melodic-desktop-full
 
   if [ ! -f "/etc/ros/rosdep/sources.list.d/20-default.list" ]; then
     echo $ROOT_PASSWD | sudo -S rosdep init
@@ -165,7 +165,7 @@ if [ "$ROS_DEBIAN" == "1" ]; then
   done
   set -o errexit 
 
-  echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc
+  echo "source /opt/ros/melodic/setup.bash" >> ~/.bashrc
   source ~/.bashrc
   echo $ROOT_PASSWD | sudo -S apt-get install -y python-rosinstall python-rosinstall-generator python-wstool build-essential
 
@@ -261,7 +261,7 @@ fi
 # Setup OpenCV
 if [ "$OPENCV" == "1" ]; then
   echo "===================Installing OpenCV3 from Source...======================="
-  #echo $ROOT_PASSWD | sudo -S apt-get install -y build-essential
+  echo $ROOT_PASSWD | sudo -S apt-get install -y build-essential cmake git
   #echo $ROOT_PASSWD | sudo -S apt-get install -y cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev 
   # add HTTPS protocol support
   #echo $ROOT_PASSWD | sudo -S apt-get install -y libcurl4-gnutls-dev zlib1g-dev
@@ -329,16 +329,16 @@ fi
 # Setup LIBREALSENSE
 if [ "$LIBREALSENSE" == "1" ]; then
   echo "===================Setting Up LibRealSense...======================="
-  echo $ROOT_PASSWD | sudo -S apt-get install -y libusb-1.0.0-dev pkg-config libgtk-3-dev libglfw3-dev libudev-dev
+  echo $ROOT_PASSWD | sudo -S apt-get install -y libusb-1.0.0-dev pkg-config libgtk-3-dev libglfw3-dev libudev-dev libglu-dev
   mkdir -p ~/workspace/libraries && cd ~/workspace/libraries
   git clone https://github.com/IntelRealSense/librealsense
   cd ~/workspace/libraries/librealsense
-  git checkout v2.27.0
+  git checkout v2.29.0
   mkdir build && cd build
   cmake ..
   echo $ROOT_PASSWD | sudo -S make uninstall
   make clean
-  make
+  make -j4
   echo $ROOT_PASSWD | sudo -S make install
 
   cd ..
@@ -424,11 +424,14 @@ if [ "$OPENVINO" == "1" ]; then
   #wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/14920/l_openvino_toolkit_p_2018.4.420.tgz
   #wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/15078/l_openvino_toolkit_p_2018.5.455.tgz
   #wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/15382/l_openvino_toolkit_p_2019.1.094.tgz
-  wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/15512/l_openvino_toolkit_p_2019.1.144.tgz
+  #wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/15512/l_openvino_toolkit_p_2019.1.144.tgz
+  wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/16057/l_openvino_toolkit_p_2019.3.376.tgz
   #tar -xvf l_openvino_toolkit_p_2018.3.343.tgz
-  tar -xvf l_openvino_toolkit_p_2019.1.094.tgz
+  #tar -xvf l_openvino_toolkit_p_2019.1.094.tgz
+  tar -xvf l_openvino_toolkit_p_2019.3.376.tgz
   #cd l_openvino_toolkit_p_2018.3.343
-  cd l_openvino_toolkit_p_2019.1.094
+  #cd l_openvino_toolkit_p_2019.1.094
+  cd l_openvino_toolkit_p_2019.3.376
   echo $ROOT_PASSWD | sudo -S ./install_openvino_dependencies.sh
   cp $basedir/config/openvino/openvino_silent.cfg .
   echo $ROOT_PASSWD | sudo -S ./install.sh --silent openvino_silent.cfg
