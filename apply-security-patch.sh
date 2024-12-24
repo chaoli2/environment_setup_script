@@ -1,7 +1,7 @@
 #!/bin/bash
 apt install -y unzip ufw
 wget http://certificates.intel.com/repository/certificates/Intel%20Root%20Certificate%20Chain%20Base64.zip
-wget http://certs.intel.com/crt/IntelSHA2RootChain-Base64.zip
+wget https://certificates.intel.com/repository/certificates/IntelSHA2RootChain-Base64.zip
 
 mkdir -p  /usr/local/share/ca-certificates
 
