@@ -12,6 +12,7 @@ unzip ~/"IntelSHA384TrustChain-Base64.zip" -d /usr/local/share/ca-certificates
 update-ca-certificates
 c_rehash
 
-wget -4 -e use_proxy=no  https://isscorp.intel.com/IntelSM_BigFix/21074/All_BigFix_Client_Installers/Non_Windows/bigfix_non_windows-BESClient_Labs_Prod-TLS.sh
+# wget -4 -e use_proxy=no  https://isscorp.intel.com/IntelSM_BigFix/21074/All_BigFix_Client_Installers/Non_Windows/bigfix_non_windows-BESClient_Labs_Prod-TLS.sh
+wget --no-check-certificate https://isscorp.intel.com/IntelSM_BigFix/21074/All_BigFix_Client_Installers/Non_Windows/bigfix_non_windows-BESClient_Labs_Prod-TLS.sh
 chmod 744 bigfix_non_windows-BESClient_Labs_Prod-TLS.sh
 ./bigfix_non_windows-BESClient_Labs_Prod-TLS.sh
